@@ -12,11 +12,11 @@ A Python implementation of the Unix `wc` (word count) command-line tool built as
 
 ### Standard Input (Pipe) Usage
 <img width="700" height="28" alt="image" src="https://github.com/user-attachments/assets/1b608542-11e8-4f95-8896-6402fbdf1aae" />
-*Processing input from pipes with different options*
+
 
 ### Error Handling
 <img width="695" height="29" alt="image" src="https://github.com/user-attachments/assets/43ea6b51-33ef-4fd5-b0ce-24d40d7d4090" />
-*Graceful handling of missing files and invalid inputs*
+
 ## ✨ Features
 
 - **Byte Counting (`-c`)**: Count the number of bytes in a file
