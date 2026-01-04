@@ -5,10 +5,11 @@ def wcTool():
     Main function that handles the word count tool logic.
     Supports file input and stdin (pipe) input with various options.
     """
-    # Check if filename is provided along with an option
-    if len(sys.argv) > 2:
-        filename = sys.argv[-1]  # Last argument is the filename
-        option = sys.argv[1]      # First argument is the option flag
+    # Parse command line arguments
+    if len(sys.argv) == 3:
+        # Format: python tool.py -c file.txt (option + filename)
+        option = sys.argv[1]
+        filename = sys.argv[2]
         
         # Execute appropriate function based on the option
         if option == '-c':
@@ -18,30 +19,40 @@ def wcTool():
         elif option == '-w':
             worldCount_by_filename(filename)
         else:
-            # If invalid option or no option, print all stats
+            # Invalid option, print all stats
             print_all_stats(filename)
     
-    else:
-        # Handle stdin input (when using pipes like: cat file.txt | python tool.py -l)
-        content = sys.stdin.read()
-        option = sys.argv[-1] if len(sys.argv) > 1 else None
+    elif len(sys.argv) == 2:
+        # Could be: python tool.py file.txt OR cat file.txt | python tool.py -l
+        arg = sys.argv[1]
         
-        # Process stdin content based on the option
-        if option == '-c':
-            # Count bytes by encoding the content
-            print(f"  {len(content.encode('utf-8'))}")
-        elif option == '-l':
-            # Count lines by splitting on newlines
-            print(f"  {len(content.splitlines())}")
-        elif option == '-w':
-            # Count words by splitting on whitespace
-            print(f"  {len(content.split())}")
+        if arg.startswith('-'):
+            # It's an option for stdin: cat file.txt | python tool.py -l
+            content = sys.stdin.read()
+            
+            if arg == '-c':
+                print(f"  {len(content.encode('utf-8'))}")
+            elif arg == '-l':
+                print(f"  {len(content.splitlines())}")
+            elif arg == '-w':
+                print(f"  {len(content.split())}")
+            else:
+                # Invalid option, print all stats
+                lines = len(content.splitlines())
+                words = len(content.split())
+                bytes_count = len(content.encode('utf-8'))
+                print(f"  {lines}  {words} {bytes_count}")
         else:
-            # Print all statistics if no specific option provided
-            lines = len(content.splitlines())
-            words = len(content.split())
-            bytes_count = len(content.encode('utf-8'))
-            print(f"  {lines}  {words} {bytes_count}")
+            # It's a filename: python tool.py file.txt
+            print_all_stats(arg)
+    
+    else:
+        # No arguments: cat file.txt | python tool.py
+        content = sys.stdin.read()
+        lines = len(content.splitlines())
+        words = len(content.split())
+        bytes_count = len(content.encode('utf-8'))
+        print(f"  {lines}  {words} {bytes_count}")
 
 
 def character_or_byte_count_by_filename(filename: str):
